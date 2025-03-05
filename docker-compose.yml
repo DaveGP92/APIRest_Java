@@ -1,7 +1,5 @@
-version: '3.8'
-
 services:
-  mysql:
+  mysql_db:
     image: mysql:8.0
     container_name: mysql_db
     restart: always
@@ -10,13 +8,19 @@ services:
       MYSQL_DATABASE: bd_crud
     ports:
       - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      retries: 5
+      start_period: 20s
 
   app:
     build: .
     container_name: crud_api
     restart: always
     depends_on:
-      - mysql
+      mysql_db:
+        condition: service_healthy
     ports:
       - "4000:4000"
     environment:
@@ -24,4 +28,5 @@ services:
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: 1234
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.MySQLDialect
 

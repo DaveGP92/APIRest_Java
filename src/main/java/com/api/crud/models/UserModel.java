@@ -1,8 +1,8 @@
 package com.api.crud.models;
 
-import jakarta.validation.constraints.Email;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
+import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,15 +12,19 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-
 public class UserModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
+    @Column(nullable = false)
     private String firstName;
+
+    @Column(nullable = false)
     private String lastName;
 
     @Email
     @NotNull
+    @Column(unique = true, nullable = false)
     private String email;
 }
